@@ -9,7 +9,7 @@ import time
 app = Flask(__name__)
 app.secret_key = os.urandom(24)  # Generate a secure secret key
 
-client = MongoClient('mongodb://localhost:27017/')  # Connect to MongoDB
+client = MongoClient('mongodb://taskm_app-db-1:27017/')  # Connect to MongoDB
 db = client['Website_db']  # Select the database
 
 UPLOAD_FOLDER = 'C:\\Users\\nadav\\OneDrive\\Desktop\\DevOps22\\GIT\\TestWebsite\\static\\uploads\\'
@@ -212,5 +212,23 @@ def save_task():
     SaveTask(new_task)
     return jsonify({'message': 'Task saved successfully'})
 
+
 if __name__ == '__main__':
-    app.run(debug=True, host="0.0.0.0")
+    import time
+
+    max_retries = 10
+    retries = 0
+    while retries < max_retries:
+        try:
+            client = MongoClient('mongodb://db:27017/')
+            db = client['Website_db']
+            break
+        except Exception as e:
+            print(f"Connection failed, retrying in 5 seconds... ({retries + 1}/{max_retries})")
+            retries += 1
+            time.sleep(5)
+
+    if retries == max_retries:
+        print("Failed to connect to MongoDB after multiple retries. Exiting.")
+    else:
+        app.run(debug=True, host="0.0.0.0")

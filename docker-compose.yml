@@ -9,10 +9,13 @@ services:
       - db
   db:
     image: mongo
+    container_name: taskm_app-db-1
+    hostname: taskm_app-db-1
     ports:
       - 27017:27017
     volumes:
       - mongodb_data:/data/db
+
 volumes:
   mongodb_data:
 
