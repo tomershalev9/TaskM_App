@@ -220,7 +220,7 @@ if __name__ == '__main__':
     retries = 0
     while retries < max_retries:
         try:
-            client = MongoClient('mongodb://db:27017/')
+            client = MongoClient('mongodb://taskm-app-db-1:27017/')
             db = client['Website_db']
             break
         except Exception as e:
