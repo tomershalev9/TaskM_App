@@ -9,7 +9,7 @@ import time
 app = Flask(__name__)
 app.secret_key = os.urandom(24)  # Generate a secure secret key
 
-client = MongoClient('mongodb://mongo:27017/')  # Connect to MongoDB
+client = MongoClient('mongodb://mongo-svc:27017/')  # Connect to MongoDB
 db = client['Website_db']  # Select the database
 
 UPLOAD_FOLDER = 'C:\\Users\\nadav\\OneDrive\\Desktop\\DevOps22\\GIT\\TestWebsite\\static\\uploads\\'
