@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, session, redirect, url_for, flash, jsonify
 from datetime import timedelta
-from flask_pymongo import PyMongo
+from pymongo import MongoClient
 from bson.objectid import ObjectId
 from werkzeug.utils import secure_filename
 import os
@@ -9,13 +9,16 @@ import time
 app = Flask(__name__)
 app.secret_key = os.urandom(24)  # Generate a secure secret key
 
-# client = MongoClient('mongodb://taskm-app-db-1:27017/')  # Connect to MongoDB
-# db = client['Website_db']  # Select the database
+client = MongoClient('mongodb://mongo:27017/')  # Connect to MongoDB
+db = client['Website_db']  # Select the database
 
-# app = Flask(__name__)
-app.config["MONGO_URI"] = "mongodb://mongo:27017/dev"
-mongo = PyMongo(app)
-db = mongo.db
+# mongo_uri = "mongodb://mongo:27017/"
+# client = MongoClient(mongo_uri)
+# db = client.get_database()
+collections = db.list_collection_names()
+
+print("Connected to MongoDB")
+print("Available collections:", collections)
 
 UPLOAD_FOLDER = 'C:\\Users\\nadav\\OneDrive\\Desktop\\DevOps22\\GIT\\TestWebsite\\static\\uploads\\'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}  # Specify the allowed file extensions
@@ -220,20 +223,4 @@ def save_task():
 
 if __name__ == '__main__':
     import time
-
-    max_retries = 10
-    retries = 0
-    while retries < max_retries:
-        try:
-            client = MongoClient('mongodb://taskm-app-db-1:27017/')
-            db = client['Website_db']
-            break
-        except Exception as e:
-            print(f"Connection failed, retrying in 5 seconds... ({retries + 1}/{max_retries})")
-            retries += 1
-            time.sleep(5)
-
-    if retries == max_retries:
-        print("Failed to connect to MongoDB after multiple retries. Exiting.")
-    else:
-        app.run(debug=True, host="0.0.0.0", port=5000)
+    app.run(debug=True, host="0.0.0.0", port=5000)

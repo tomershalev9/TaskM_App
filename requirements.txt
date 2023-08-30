@@ -1,5 +1,5 @@
-Flask
-pymongo
-Flask-PyMongo
-werkzeug
-
+Flask==2.2.5
+Flask-PyMongo==2.3.0
+mongoengine==0.24.0
+pymongo==3.11.4
+werkzeug==2.2.3
