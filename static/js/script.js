@@ -293,7 +293,7 @@ function changeDisplay(){
         calendar.style.display = "none";
         tasks.style.display = "none";
         formAddTask.style.display = "block";
-        dateTitle.innerHTML = "Crear nueva tarea";
+        dateTitle.innerHTML = "Create new task";
         changeButton.style.backgroundImage = "url(assets/back.svg)"
 
     }
@@ -375,12 +375,13 @@ function updateDisplay(){
                     <p>${element.category}</p>
                 </div>
                 <div class="event-content ${divMarginColor}">
+                    <img src="assets/menu-card.png" class="menu-card m-${dayButtonSelected}">
                     <h3>${element.name}</h3>
                     <p>${element.comment}</p>
                 </div>
                 <div class="event-info">
                     <div class="time">${element.startTime} - ${element.finishTime}</div>
-                    <div class="status">Active</div>
+                    <div class="status">Activo</div>
                 </div>
             </div>
         
@@ -393,7 +394,7 @@ function updateDisplay(){
     }else{
 
         tasks.innerHTML = ` <p style="text-align: center; margin: 30px;">
-                                No hay tareas para este día, oprime el botón para crear una nueva
+                                There are no tasks for today, press the button to create new one
                             </p>
                             <button onclick="changeDisplay()" id="new-task-secondary" style="width: 100px; display: block; margin: auto; background: var(--blue-main-bg-color); padding: 20px;border-radius: 25px;cursor: pointer;">
                                 <img src="assets/add.svg">
@@ -524,7 +525,7 @@ form.addEventListener("submit", (e) => {
 
         const error = document.getElementById("error");
         error.classList.add("error");
-        error.innerHTML = "Hay campos que aún debes rellenar";
+        error.innerHTML = "There are fields that you still have to fill out";
 
     }else{
 
