@@ -380,7 +380,7 @@ function updateDisplay(){
                 </div>
                 <div class="event-info">
                     <div class="time">${element.startTime} - ${element.finishTime}</div>
-                    <div class="status">Activ1</div>
+                    <div class="status">Active</div>
                 </div>
             </div>
         
