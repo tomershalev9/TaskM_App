@@ -44,8 +44,8 @@ const maxDaysPerMonth = {
   8: "September", 9: "October", 10: "November", 11: "December"
 };
 
-const dateComplete =    months[date.getMonth()]+ ", " +
-                        days[date.getDay()] + " " +
+const dateComplete =    months[date.getMonth()]+ ", " + 
+                        days[date.getDay()] + " " + 
                         date.getDate();
 
 dateTitle.innerHTML = dateComplete;
@@ -90,13 +90,13 @@ for (let i = currentDay; i <= daysLeft; i++) {
 
         var returnItem = "";
 
-        if(spansToFill.includes("Development")){
+        if(spansToFill.includes("DESARROLLO")){
             returnItem = returnItem + "<span class='span-type span-type-development'></span> \n";
         }
-        if(spansToFill.includes("University")){
+        if(spansToFill.includes("UNIVERSIDAD")){
             returnItem = returnItem + "<span class='span-type span-type-university'></span> \n";
         }
-        if(spansToFill.includes("Home")){
+        if(spansToFill.includes("HOGAR")){
             returnItem = returnItem + "<span class='span-type span-type-home'></span> \n";
         }
 
@@ -119,7 +119,7 @@ for (let i = currentDay; i <= daysLeft; i++) {
                     ;
 
     calendar.appendChild(div)
-
+    
     var elementCalendar = document.getElementById(i);
     daysArray.push(elementCalendar);
 }
@@ -153,7 +153,7 @@ const changeDayInformation = function () {
             daysArray[i].classList.add("no-selected");
         }
     }
-
+    
     daySelected.classList.add("date-selected-color")
     daySelected.classList.add("date-selected")
     daySelected.classList.remove("no-selected")
@@ -165,6 +165,27 @@ const changeDayInformation = function () {
 /* The following code is adding an event listener to each day of the week. */
 
 daysArray.forEach(days => { days.addEventListener("click", changeDayInformation)});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* The following code is adding an event listener to each of the divs. When the div is clicked, the class
 is added to the div. This code works only to change some styles.*/
@@ -194,6 +215,26 @@ homeDiv.addEventListener("click", () => {
 },false);
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* Adding an event listener to the button with the id of "create-task" and when the button is clicked
 it will run the function changeDisplay() */
 
@@ -204,6 +245,27 @@ const formAddTask = document.getElementById("form-add-tasks");
 changeButton.addEventListener("click", () => {
     changeDisplay()
 },false)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /**
  * The following code changes the styles of the button and top title when you change sections.
@@ -219,7 +281,7 @@ function changeDisplay(){
         tasks.style.display = "block";
         formAddTask.style.display = "none";
         dateTitle.innerHTML = dateComplete;
-        changeButton.style.backgroundImage = "url({{ url_for('static', filename='assets/add.svg') }})";
+        changeButton.style.backgroundImage = "url(assets/add.svg)"
 
         updateDisplay();
 
@@ -231,12 +293,32 @@ function changeDisplay(){
         calendar.style.display = "none";
         tasks.style.display = "none";
         formAddTask.style.display = "block";
-        dateTitle.innerHTML = "Create new Task";
-        changeButton.style.backgroundImage = "url(static/assets/back.svg)"
+        dateTitle.innerHTML = "Crear nueva tarea";
+        changeButton.style.backgroundImage = "url(assets/back.svg)"
 
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /**
  * It takes the tasks from localStorage, filters them by the day selected, and then displays them in
@@ -244,7 +326,7 @@ function changeDisplay(){
 **/
 
 function updateDisplay(){
-console.log("updateDisplay");
+
     let updatedTasks = [];
     updatedTasks = JSON.parse(localStorage.getItem('tasks'));
     let dayButtonSelected = parseInt(document.getElementsByClassName("date-selected")[0].id);
@@ -273,10 +355,10 @@ console.log("updateDisplay");
         var divTextColor = "";
         var divMarginColor = "";
 
-        if(element.category == "Development"){
+        if(element.category == "DESARROLLO"){
             divTextColor = "type-development";
             divMarginColor = "event-development";
-        }else if(element.category == "University"){
+        }else if(element.category == "UNIVERSIDAD"){
             divTextColor = "type-university";
             divMarginColor = "event-university";
         }else{
@@ -287,63 +369,60 @@ console.log("updateDisplay");
 
 
         div.innerHTML = `
-
+        
         <div class="event-card">
                 <div class="type ${divTextColor}">
                     <p>${element.category}</p>
                 </div>
                 <div class="event-content ${divMarginColor}">
-                    <img src="/static/assets/delete.png" class="delete-task m-${dayButtonSelected}">
-                </div>
-                <div class="event-content ${divMarginColor}">
-                    <img src="/static/assets/menu-card.png" class="menu-card m-${dayButtonSelected}">
+                    <img src="assets/menu-card.png" class="menu-card m-${dayButtonSelected}">
                     <h3>${element.name}</h3>
                     <p>${element.comment}</p>
                 </div>
                 <div class="event-info">
                     <div class="time">${element.startTime} - ${element.finishTime}</div>
-                    <div class="status">Active</div>
+                    <div class="status">Activo</div>
                 </div>
             </div>
-
+        
         `;
 
         tasks.appendChild(div)
-
+            
         });
 
     }else{
 
         tasks.innerHTML = ` <p style="text-align: center; margin: 30px;">
-                                There are no tasks for this day, press the button to create a new
+                                No hay tareas para este día, oprime el botón para crear una nueva
                             </p>
                             <button onclick="changeDisplay()" id="new-task-secondary" style="width: 100px; display: block; margin: auto; background: var(--blue-main-bg-color); padding: 20px;border-radius: 25px;cursor: pointer;">
-                                      <img src="/static/assets/add.svg">
+                                <img src="assets/add.svg">
                             </button>
                             `
     }
-
+    
 
 }
 
 
-function clearTasks() {
-    console.log("clear_tasks");
-    fetch('/clear_tasks', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data.message);
-        updateDisplay(); // Update the UI after clearing tasks
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /**
@@ -364,121 +443,137 @@ function saveAnimation(){
     },1500);
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
  * It takes a task object, parses the localStorage item 'tasks' into an array, pushes the task object
  * into the array, and then stringifies the array and saves it back into localStorage.
  * @param task - the task object
  */
 
-
-   function deleteTask(taskId) {
-    console.log("Task ID:", taskId); // Add this line to check the received taskId
-
-    fetch('/delete_task', {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            taskId: taskId
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data.message);
-        // Handle the response and perform any necessary actions
-        // For example, you can remove the deleted task from the UI
-        // using JavaScript DOM manipulation.
-        updateDisplay(); // Call the updateDisplay() function to update the UI
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
+function SaveTask(task){
+    var taskArray = [];
+    taskArray = JSON.parse(localStorage.getItem('tasks'));
+    taskArray.push(task);
+    localStorage.setItem('tasks', JSON.stringify(taskArray));
+    saveAnimation();
 }
 
 
 
-function saveTaskToDatabase(task) {
-  $.ajax({
-    url: "/save_task",
-    type: "POST",
-    data: JSON.stringify(task),
-    contentType: "application/json",
-    success: function (response) {
-      console.log("Task saved successfully!");
 
-      // Update the UI
-      var taskArray = [];
-      taskArray = JSON.parse(localStorage.getItem("tasks"));
-      taskArray.push(task);
-      localStorage.setItem("tasks", JSON.stringify(taskArray));
 
-      saveAnimation();
-      updateDisplay(); // Update the UI display
-    },
-    error: function (error) {
-      console.error("Error saving task:", error);
-    },
-  });
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Creating a new task object and saving it to local storage. */
 
 form.addEventListener("submit", (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  var data = new FormData(form);
+    var data = new FormData(form);
 
-  var taskName = data.get("task-name");
-  var taskDate = data.get("datepicker");
-  var taskStartTime = data.get("task-start-time");
-  var taskFinishTime = data.get("task-finish-time");
-  var taskInfo = data.get("task-info");
-  var taskCategory = data.get("category");
+    var taskName = data.get("task-name");
+    var taskDate = data.get("datepicker");
+    var taskStartTime = data.get("task-start-time");
+    var taskFinishTime = data.get("task-finish-time");
+    var taskInfo = data.get("task-info");
+    var taskCategory = data.get("category");
 
-  if (
-    taskName == "" ||
-    taskDate == "" ||
-    taskStartTime == "" ||
-    taskFinishTime == "" ||
-    taskCategory == ""
-  ) {
-    const error = document.getElementById("error");
-    error.classList.add("error");
-    error.innerHTML = "There are fields that you still have to fill out";
-  } else {
-    error.classList.remove("error");
-    error.innerHTML = "";
+    if(taskName == "" || taskDate == "" || taskStartTime == ""
+    || taskFinishTime == "" || taskCategory == ""){
 
-    class Task {
-      constructor(
-        name,
-        date,
-        stime,
-        ftime,
-        category,
-        comment = ""
-      ) {
-        this.comment = comment;
-        this.category = category;
-        this.startTime = stime;
-        this.finishTime = ftime;
-        this.date = date;
-        this.name = name;
-      }
+        const error = document.getElementById("error");
+        error.classList.add("error");
+        error.innerHTML = "Hay campos que aún debes rellenar";
+
+    }else{
+
+        error.classList.remove("error");
+        error.innerHTML = "";
+
+        class Task {
+            constructor(name, date, stime, ftime, category, comment = "") {
+                this.comment = comment;
+                this.category = category;
+                this.startTime = stime;
+                this.finishTime = ftime;
+                this.date = date;
+                this.name = name;
+            }
+        }
+
+        var newTask = new Task(taskName,taskDate,taskStartTime,taskFinishTime,taskCategory,taskInfo);
+
+        form.reset();
+        SaveTask(newTask);
+
     }
 
-    var newTask = new Task(
-      taskName,
-      taskDate,
-      taskStartTime,
-      taskFinishTime,
-      taskCategory,
-      taskInfo
-    );
+},false)
 
-    form.reset();
-    saveTaskToDatabase(newTask);
-  }
-});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /** Code creates a new time div taking into account the start time */
@@ -524,12 +619,40 @@ inputStartTime.addEventListener("mouseleave", function(){
 })
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
  * It deletes tasks from the local storage that are older than today's date.
  */
 
 function deleteTaskPastDays(){
-console.log("deleteTaskPastDays");
+
     var taskArray = [];
     taskArray = JSON.parse(localStorage.getItem('tasks'));
     var newTaskArray = []
@@ -552,6 +675,29 @@ console.log("deleteTaskPastDays");
     });
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* The above code is using the jQuery UI datepicker and timepicker plugins to create a datepicker and
 timepicker. */
