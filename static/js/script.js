@@ -375,7 +375,6 @@ function updateDisplay(){
                     <p>${element.category}</p>
                 </div>
                 <div class="event-content ${divMarginColor}">
-                    <img src="assets/menu-card.png" class="menu-card m-${dayButtonSelected}">
                     <h3>${element.name}</h3>
                     <p>${element.comment}</p>
                 </div>
