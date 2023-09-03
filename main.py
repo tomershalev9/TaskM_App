@@ -75,18 +75,6 @@ def home():
     return render_template('index.html', css_file='css/main.css')
 
 
-@app.route('/tasktest', methods=['GET', 'POST'])
-def tasks():
-    if 'username' not in session:
-        return render_template('login_required.html', css_file='css/main.css')
-
-    # Retrieve tasks from MongoDB
-    tasks = db.tasks.find()
-
-    return render_template('tasktest.html', tasks=tasks, css_file='style.css', delay=2.5)
-
-
-
 
 @app.route('/about')
 def about():
