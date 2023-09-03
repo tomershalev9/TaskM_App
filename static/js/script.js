@@ -61,6 +61,10 @@ const month = date.getMonth() + 1;
 const daysLeft = GetDaysLeft(currentYear,month);
 
 
+
+
+
+
 /* Creating a div element for each day of the month and appending it to the calendar div. */
 
 var daysArray = []
@@ -289,7 +293,7 @@ function changeDisplay(){
         calendar.style.display = "none";
         tasks.style.display = "none";
         formAddTask.style.display = "block";
-        dateTitle.innerHTML = "Create new task";
+        dateTitle.innerHTML = "Crear nueva tarea";
         changeButton.style.backgroundImage = "url(assets/back.svg)"
 
     }
@@ -389,7 +393,7 @@ function updateDisplay(){
     }else{
 
         tasks.innerHTML = ` <p style="text-align: center; margin: 30px;">
-                                No tasks for today , Press this button to create new one
+                                No hay tareas para este día, oprime el botón para crear una nueva
                             </p>
                             <button onclick="changeDisplay()" id="new-task-secondary" style="width: 100px; display: block; margin: auto; background: var(--blue-main-bg-color); padding: 20px;border-radius: 25px;cursor: pointer;">
                                 <img src="assets/add.svg">
@@ -520,24 +524,23 @@ form.addEventListener("submit", (e) => {
 
         const error = document.getElementById("error");
         error.classList.add("error");
-        error.innerHTML = "There are fields that you still have to fill out";
+        error.innerHTML = "Hay campos que aún debes rellenar";
 
     }else{
 
         error.classList.remove("error");
         error.innerHTML = "";
 
-        class Task:
-            def __init__(self, name, date, stime, ftime, category, comment="", username=""):
-                self._id = None
-                self.comment = comment
-                self.category = category
-                self.startTime = stime
-                self.finishTime = ftime
-                self.date = date
-                self.name = name
-                self.username = username
-    
+        class Task {
+            constructor(name, date, stime, ftime, category, comment = "") {
+                this.comment = comment;
+                this.category = category;
+                this.startTime = stime;
+                this.finishTime = ftime;
+                this.date = date;
+                this.name = name;
+            }
+        }
 
         var newTask = new Task(taskName,taskDate,taskStartTime,taskFinishTime,taskCategory,taskInfo);
 

@@ -25,19 +25,6 @@
             </div>
 <div class="tasks" id="tasks">
     {% for task in tasks %}
-    <div class="event-card" data-task-id="{{ task._id }}">
-        <h3>{{ task.name }}</h3>
-        <p>Date: {{ task.date }}</p>
-        <p>Start Time: {{ task.startTime }}</p>
-        <p>End Time: {{ task.finishTime }}</p>
-        <p>Category: {{ task.category }}</p>
-        <p>Description: {{ task.comment }}</p>
-        <div class="delete-task-container">
-            <button class="delete-task" onclick="deleteTask('{{ task._id }}')">DELETE</button>
-        </div>
-    </div>
-    {% endfor %}
-    <!-- {% for task in tasks %}
 <div class="event-card" data-task-id="{{ task._id }}">
     <h3>{{ task._id }}</h3>
     <p>{{ task.description }}</p>
@@ -45,7 +32,7 @@
         <button class="delete-task" onclick="deleteTask('{{ task._id }}')">DELETE</button>
     </div>
 </div>
-    {% endfor %} -->
+    {% endfor %}
 </div>
 
 
