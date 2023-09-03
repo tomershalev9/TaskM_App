@@ -111,8 +111,6 @@ def login():
     # Render the login page template
     return render_template('login.html', css_file='css/main.css')
 
-from flask_login import current_user
-
 @app.route('/tasks', methods=['GET', 'POST'])
 def tasks():
     # Retrieve tasks for the currently logged-in user from MongoDB
