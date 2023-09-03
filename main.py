@@ -3,7 +3,6 @@ from datetime import timedelta
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 from werkzeug.utils import secure_filename
-from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 import os
 import time
 
@@ -26,17 +25,6 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}  # Specify the allowed file e
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER  # Set the upload folder configuration
 
-
-login_manager = LoginManager()
-login_manager.login_view = "login"  # Set the login view
-
-@login_manager.user_loader
-def load_user(user_id):
-    # Implement a function to load a user based on user_id from your database
-    return User.query.get(int(user_id))
-
-from flask import jsonify
-
 @app.route('/delete_task', methods=['DELETE'])
 def delete_task():
     task_id = request.json['taskId']
@@ -49,13 +37,16 @@ def delete_task():
 
 
 class Task:
-    def __init__(self, name, date, stime, ftime, category, comment=""):
+    def __init__(self, name, date, stime, ftime, category, comment="", username=""):
+        self._id = None  # MongoDB will automatically generate this
         self.comment = comment
         self.category = category
         self.startTime = stime
         self.finishTime = ftime
         self.date = date
         self.name = name
+        self.username = username  # Associate tasks with a user
+
 
 def SaveTask(task):
     # Save the task to MongoDB
@@ -123,7 +114,6 @@ def login():
 from flask_login import current_user
 
 @app.route('/tasks', methods=['GET', 'POST'])
-@login_required
 def tasks():
     # Retrieve tasks for the currently logged-in user from MongoDB
     tasks = db.tasks.find({'username': session['username']})
@@ -218,7 +208,6 @@ def register():
 
 
 @app.route('/save_task', methods=['POST'])
-@login_required
 def save_task():
     task_data = request.get_json()
     username = session['username']  # Get the current user's username
