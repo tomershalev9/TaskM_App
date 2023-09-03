@@ -61,10 +61,6 @@ const month = date.getMonth() + 1;
 const daysLeft = GetDaysLeft(currentYear,month);
 
 
-
-
-
-
 /* Creating a div element for each day of the month and appending it to the calendar div. */
 
 var daysArray = []
@@ -531,16 +527,17 @@ form.addEventListener("submit", (e) => {
         error.classList.remove("error");
         error.innerHTML = "";
 
-        class Task {
-            constructor(name, date, stime, ftime, category, comment = "") {
-                this.comment = comment;
-                this.category = category;
-                this.startTime = stime;
-                this.finishTime = ftime;
-                this.date = date;
-                this.name = name;
-            }
-        }
+        class Task:
+            def __init__(self, name, date, stime, ftime, category, comment="", username=""):
+                self._id = None
+                self.comment = comment
+                self.category = category
+                self.startTime = stime
+                self.finishTime = ftime
+                self.date = date
+                self.name = name
+                self.username = username
+    
 
         var newTask = new Task(taskName,taskDate,taskStartTime,taskFinishTime,taskCategory,taskInfo);
 

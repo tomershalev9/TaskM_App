@@ -3,6 +3,7 @@ from datetime import timedelta
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 from werkzeug.utils import secure_filename
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 import os
 import time
 
@@ -25,6 +26,14 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}  # Specify the allowed file e
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER  # Set the upload folder configuration
 
+
+login_manager = LoginManager()
+login_manager.login_view = "login"  # Set the login view
+
+@login_manager.user_loader
+def load_user(user_id):
+    # Implement a function to load a user based on user_id from your database
+    return User.query.get(int(user_id))
 
 from flask import jsonify
 
@@ -49,19 +58,20 @@ class Task:
         self.name = name
 
 def SaveTask(task):
-    # Save the task to the jQuery database
-    # Your existing code here...
-
     # Save the task to MongoDB
     collection = db['tasks']
-    collection.insert_one({
+    task_dict = {
         'name': task.name,
         'date': task.date,
         'startTime': task.startTime,
         'finishTime': task.finishTime,
         'category': task.category,
-        'comment': task.comment
-    })
+        'comment': task.comment,
+        'username': task.username  # Include the username
+    }
+    inserted_id = collection.insert_one(task_dict).inserted_id
+    return inserted_id  # Return the ID of the inserted task
+
 
 @app.route("/")
 @app.route("/home")
@@ -110,15 +120,15 @@ def login():
     # Render the login page template
     return render_template('login.html', css_file='css/main.css')
 
+from flask_login import current_user
+
 @app.route('/tasks', methods=['GET', 'POST'])
+@login_required
 def tasks():
-    if 'username' not in session:
-        return render_template('login_required.html', css_file='css/main.css')
-
-    # Retrieve tasks from MongoDB
-    tasks = db.tasks.find()
-
+    # Retrieve tasks for the currently logged-in user from MongoDB
+    tasks = db.tasks.find({'username': session['username']})
     return render_template('tasks.html', tasks=tasks, css_file='main.css', delay=2.5)
+
 
 
 @app.route('/login_success')
@@ -208,18 +218,23 @@ def register():
 
 
 @app.route('/save_task', methods=['POST'])
+@login_required
 def save_task():
     task_data = request.get_json()
+    username = session['username']  # Get the current user's username
+    
     new_task = Task(
         task_data['name'],
         task_data['date'],
         task_data['startTime'],
         task_data['finishTime'],
         task_data['category'],
-        task_data['comment']
+        task_data['comment'],
+        username  # Associate the task with the current user
     )
-    SaveTask(new_task)
-    return jsonify({'message': 'Task saved successfully'})
+    
+    inserted_id = SaveTask(new_task)  # Insert the task into MongoDB
+    return jsonify({'message': 'Task saved successfully', 'taskId': str(inserted_id)})
 
 
 if __name__ == '__main__':
