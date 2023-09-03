@@ -76,7 +76,7 @@ def home():
 
 
 @app.route('/tasktest', methods=['GET', 'POST'])
-def tasks():
+def tasktest():
     if 'username' not in session:
         return render_template('login_required.html', css_file='css/main.css')
 
