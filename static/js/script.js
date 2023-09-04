@@ -267,7 +267,7 @@ changeButton.addEventListener("click", () => {
 
 
 
-/**
+/***
  * The following code changes the styles of the button and top title when you change sections.
  */
 
