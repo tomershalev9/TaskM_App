@@ -221,7 +221,6 @@ def save_task():
     SaveTask(new_task)
     return jsonify({'message': 'Task saved successfully'})
 
-
 if __name__ == '__main__':
     import time
     app.run(debug=True, host="0.0.0.0", port=5000)

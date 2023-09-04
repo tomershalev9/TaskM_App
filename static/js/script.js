@@ -428,21 +428,44 @@ function updateDisplay(){
  * When the save button is clicked, the form is blurred and the task-saved div is displayed. After one
  * second, the blur is removed and the task-saved div is hidden.
  */
-
-function saveAnimation(){
+function saveAnimation() {
     const taskSavedDiv = document.getElementById("task-saved");
     form.style.filter = "blur(1.5px)";
     taskSavedDiv.style.display = "block";
-
-    setTimeout(() => {
+  
+    const data = new FormData(form);
+  
+    // Create an object to hold the task data
+    const taskData = {
+      name: data.get("task-name"),
+      date: data.get("datepicker"),
+      startTime: data.get("task-start-time"),
+      finishTime: data.get("task-finish-time"),
+      category: data.get("category"),
+      comment: data.get("task-info"),
+    };
+  
+    // Make an AJAX POST request to send the task data to the server
+    fetch("/save_task", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(taskData),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data); // You can handle the response as needed
         form.style.filter = "blur(0)";
         taskSavedDiv.style.display = "none";
-        changeDisplay()
-        location.reload()
-    },1500);
-}
-
-
+        changeDisplay();
+        location.reload();
+      })
+      .catch((error) => {
+        console.error("Error saving task:", error);
+      });
+  }
+  
 
 
 
