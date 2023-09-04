@@ -281,7 +281,7 @@ function changeDisplay(){
         tasks.style.display = "block";
         formAddTask.style.display = "none";
         dateTitle.innerHTML = dateComplete;
-        changeButton.style.backgroundImage = "url(assets/add.svg)"
+        changeButton.style.backgroundImage = "url({{ url_for('static', filename='assets/add.svg') }})";
 
         updateDisplay();
 
@@ -294,7 +294,7 @@ function changeDisplay(){
         tasks.style.display = "none";
         formAddTask.style.display = "block";
         dateTitle.innerHTML = "Create new task";
-        changeButton.style.backgroundImage = "url(assets/back.svg)"
+        changeButton.style.backgroundImage = "url(static/assets/back.svg)"
 
     }
 
@@ -428,71 +428,18 @@ function updateDisplay(){
  * When the save button is clicked, the form is blurred and the task-saved div is displayed. After one
  * second, the blur is removed and the task-saved div is hidden.
  */
-function saveAnimation() {
+function saveAnimation(){
     const taskSavedDiv = document.getElementById("task-saved");
     form.style.filter = "blur(1.5px)";
     taskSavedDiv.style.display = "block";
-  
-    const data = new FormData(form);
-  
-    // Create an object to hold the task data
-    const taskData = {
-      name: data.get("task-name"),
-      date: data.get("datepicker"),
-      startTime: data.get("task-start-time"),
-      finishTime: data.get("task-finish-time"),
-      category: data.get("category"),
-      comment: data.get("task-info"),
-    };
-  
-    // Make an AJAX POST request to send the task data to the server
-    fetch("/save_task", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(taskData),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data); // You can handle the response as needed
+
+    setTimeout(() => {
         form.style.filter = "blur(0)";
         taskSavedDiv.style.display = "none";
-        changeDisplay();
-        location.reload();
-      })
-      .catch((error) => {
-        console.error("Error saving task:", error);
-      });
-  }
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        changeDisplay()
+        location.reload()
+    },1500);
+}
 
 /**
  * It takes a task object, parses the localStorage item 'tasks' into an array, pushes the task object
@@ -500,251 +447,185 @@ function saveAnimation() {
  * @param task - the task object
  */
 
-function SaveTask(task){
-    var taskArray = [];
-    taskArray = JSON.parse(localStorage.getItem('tasks'));
-    taskArray.push(task);
-    localStorage.setItem('tasks', JSON.stringify(taskArray));
-    saveAnimation();
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* Creating a new task object and saving it to local storage. */
-
-form.addEventListener("submit", (e) => {
+function saveTaskToDatabase(task) {
+    $.ajax({
+      url: "/save_task",
+      type: "POST",
+      data: JSON.stringify(task),
+      contentType: "application/json",
+      success: function (response) {
+        console.log("Task saved successfully!");
+  
+        // Update the UI
+        var taskArray = [];
+        taskArray = JSON.parse(localStorage.getItem("tasks"));
+        taskArray.push(task);
+        localStorage.setItem("tasks", JSON.stringify(taskArray));
+  
+        saveAnimation();
+        updateDisplay(); // Update the UI display
+      },
+      error: function (error) {
+        console.error("Error saving task:", error);
+      },
+    });
+  }
+  
+  form.addEventListener("submit", (e) => {
     e.preventDefault();
-
+  
     var data = new FormData(form);
-
+  
     var taskName = data.get("task-name");
     var taskDate = data.get("datepicker");
     var taskStartTime = data.get("task-start-time");
     var taskFinishTime = data.get("task-finish-time");
     var taskInfo = data.get("task-info");
     var taskCategory = data.get("category");
-
-    if(taskName == "" || taskDate == "" || taskStartTime == ""
-    || taskFinishTime == "" || taskCategory == ""){
-
-        const error = document.getElementById("error");
-        error.classList.add("error");
-        error.innerHTML = "There are fields that you still have to fill out";
-
-    }else{
-
-        error.classList.remove("error");
-        error.innerHTML = "";
-
-        class Task {
-            constructor(name, date, stime, ftime, category, comment = "") {
-                this.comment = comment;
-                this.category = category;
-                this.startTime = stime;
-                this.finishTime = ftime;
-                this.date = date;
-                this.name = name;
-            }
+  
+    if (
+      taskName == "" ||
+      taskDate == "" ||
+      taskStartTime == "" ||
+      taskFinishTime == "" ||
+      taskCategory == ""
+    ) {
+      const error = document.getElementById("error");
+      error.classList.add("error");
+      error.innerHTML = "There are fields that you still have to fill out";
+    } else {
+      error.classList.remove("error");
+      error.innerHTML = "";
+  
+      class Task {
+        constructor(
+          name,
+          date,
+          stime,
+          ftime,
+          category,
+          comment = ""
+        ) {
+          this.comment = comment;
+          this.category = category;
+          this.startTime = stime;
+          this.finishTime = ftime;
+          this.date = date;
+          this.name = name;
         }
-
-        var newTask = new Task(taskName,taskDate,taskStartTime,taskFinishTime,taskCategory,taskInfo);
-
-        form.reset();
-        SaveTask(newTask);
-
+      }
+  
+      var newTask = new Task(
+        taskName,
+        taskDate,
+        taskStartTime,
+        taskFinishTime,
+        taskCategory,
+        taskInfo
+      );
+  
+      form.reset();
+      saveTaskToDatabase(newTask);
     }
-
-},false)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/** Code creates a new time div taking into account the start time */
-
-var inputStartTime = document.getElementById("task-start-time");
-var inputEndTime = document.getElementById("task-finish-time");
-var taskTimeDiv = document.getElementById("task-time-div");
-
-inputStartTime.addEventListener("mouseleave", function(){
-
-    var inputStartTime = document.getElementById("task-start-time");
-    var inputEndTime = document.getElementById("task-finish-time");
-
-    taskTimeDiv.removeChild(inputEndTime);
-
-    let input = document.createElement("input");
-    input.name = "task-finish-time";
-    input.id = "task-finish-time";
-    input.classList.add("timepicker2");
-    input.autocomplete = "false";
-
-    taskTimeDiv.appendChild(input);
-
-    setTimeout(() => {
-        inputStartTime = document.getElementById("task-start-time");
-        var startNumber = 0
-        var startTime =inputStartTime.value
-        startNumber = startTime.split(':');
-        var secondNumber = startNumber[1].split(" ");
-
-        $('.timepicker2').timepicker({
-            timeFormat: 'h:mm p',
-            interval: 30,
-            minTime:  startNumber + ":" + secondNumber[0]+""+secondNumber[1],
-            maxTime: '11:59 PM',
-            defaultTime: startNumber + ":" + secondNumber[0],
-            startTime: startNumber + ":" + secondNumber[0],
-            dynamic: false,
-            dropdown: true,
-            scrollbar: true
-        });
-    },)
-})
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/**
- * It deletes tasks from the local storage that are older than today's date.
- */
-
-function deleteTaskPastDays(){
-
-    var taskArray = [];
-    taskArray = JSON.parse(localStorage.getItem('tasks'));
-    var newTaskArray = []
-
-    taskArray.forEach(task => {
-
-        var dateFullYear = date.getFullYear();
-        var dateFullMonth = parseInt(date.getMonth());
-        var dateFullDay = parseInt(date.getDate()-1);
-
-        const TodaysDate = new Date(dateFullYear,dateFullMonth,dateFullDay, 18, 0, 0);
-        var taskDate = new Date(task.date);
-
-        if(taskDate >= TodaysDate){
-            newTaskArray.push(task);
-        }
-
-        localStorage.setItem('tasks', JSON.stringify(newTaskArray));
-        updateDisplay();
-    });
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* The above code is using the jQuery UI datepicker and timepicker plugins to create a datepicker and
-timepicker. */
-
-$(function () {
-    $("#datepicker").datepicker();
-    });
-
-$('.timepicker').timepicker({
-    timeFormat: 'h:mm p',
-    interval: 30,
-    minTime: '00:00am',
-    maxTime: '11:30pm',
-    defaultTime: '24',
-    startTime: '1',
-    dynamic: false,
-    dropdown: true,
-    scrollbar: true
-});
-
-$('#datepicker').datepicker({
-    dateFormat: "yy-mm-dd",
-    minDate: 0
-});
-
-
-deleteTaskPastDays();
-updateDisplay();
+  });
+  
+  
+  /** Code creates a new time div taking into account the start time */
+  
+  var inputStartTime = document.getElementById("task-start-time");
+  var inputEndTime = document.getElementById("task-finish-time");
+  var taskTimeDiv = document.getElementById("task-time-div");
+  
+  inputStartTime.addEventListener("mouseleave", function(){
+  
+      var inputStartTime = document.getElementById("task-start-time");
+      var inputEndTime = document.getElementById("task-finish-time");
+  
+      taskTimeDiv.removeChild(inputEndTime);
+  
+      let input = document.createElement("input");
+      input.name = "task-finish-time";
+      input.id = "task-finish-time";
+      input.classList.add("timepicker2");
+      input.autocomplete = "false";
+  
+      taskTimeDiv.appendChild(input);
+  
+      setTimeout(() => {
+          inputStartTime = document.getElementById("task-start-time");
+          var startNumber = 0
+          var startTime =inputStartTime.value
+          startNumber = startTime.split(':');
+          var secondNumber = startNumber[1].split(" ");
+  
+          $('.timepicker2').timepicker({
+              timeFormat: 'h:mm p',
+              interval: 30,
+              minTime:  startNumber + ":" + secondNumber[0]+""+secondNumber[1],
+              maxTime: '11:59 PM',
+              defaultTime: startNumber + ":" + secondNumber[0],
+              startTime: startNumber + ":" + secondNumber[0],
+              dynamic: false,
+              dropdown: true,
+              scrollbar: true
+          });
+      },)
+  })
+  
+  
+  /**
+   * It deletes tasks from the local storage that are older than today's date.
+   */
+  
+  function deleteTaskPastDays(){
+  console.log("deleteTaskPastDays");
+      var taskArray = [];
+      taskArray = JSON.parse(localStorage.getItem('tasks'));
+      var newTaskArray = []
+  
+      taskArray.forEach(task => {
+  
+          var dateFullYear = date.getFullYear();
+          var dateFullMonth = parseInt(date.getMonth());
+          var dateFullDay = parseInt(date.getDate()-1);
+  
+          const TodaysDate = new Date(dateFullYear,dateFullMonth,dateFullDay, 18, 0, 0);
+          var taskDate = new Date(task.date);
+  
+          if(taskDate >= TodaysDate){
+              newTaskArray.push(task);
+          }
+  
+          localStorage.setItem('tasks', JSON.stringify(newTaskArray));
+          updateDisplay();
+      });
+  
+  }
+  
+  /* The above code is using the jQuery UI datepicker and timepicker plugins to create a datepicker and
+  timepicker. */
+  
+  $(function () {
+      $("#datepicker").datepicker();
+      });
+  
+  $('.timepicker').timepicker({
+      timeFormat: 'h:mm p',
+      interval: 30,
+      minTime: '00:00am',
+      maxTime: '11:30pm',
+      defaultTime: '24',
+      startTime: '1',
+      dynamic: false,
+      dropdown: true,
+      scrollbar: true
+  });
+  
+  $('#datepicker').datepicker({
+      dateFormat: "yy-mm-dd",
+      minDate: 0
+  });
+  
+  
+  deleteTaskPastDays();
+  updateDisplay();
