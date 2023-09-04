@@ -396,7 +396,7 @@ function updateDisplay(){
                                 There are no tasks for today, press the button to create new one
                             </p>
                             <button onclick="changeDisplay()" id="new-task-secondary" style="width: 100px; display: block; margin: auto; background: var(--blue-main-bg-color); padding: 20px;border-radius: 25px;cursor: pointer;">
-                                <img src="assets/add.svg">
+                                <img src="static/assets/add.svg">
                             </button>
                             `
     }
