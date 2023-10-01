@@ -19,7 +19,7 @@ collections = db.list_collection_names()
 
 print("Connected to MongoDB")
 print("Available collections:", collections)
-
+print("Hello, World!")
 UPLOAD_FOLDER = 'C:\\Users\\nadav\\OneDrive\\Desktop\\DevOps22\\GIT\\TestWebsite\\static\\uploads\\'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}  # Specify the allowed file extensions
 
