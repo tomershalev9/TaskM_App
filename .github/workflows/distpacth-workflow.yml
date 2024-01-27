@@ -18,5 +18,5 @@ jobs:
         uses: peter-evans/repository-dispatch@v2
         with:
           token: ${{ secrets.ACTIONS_KEY }}  
-          repository: xDarkN/TaskM_Config  
+          repository: tomershalev9/TaskM_Config  
           event-type: trigger-config    
